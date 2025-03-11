@@ -1,0 +1,159 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Role {
+  id_role   Int    @id @default(autoincrement())
+  name      String @unique    @default("Utilisateur")
+  users     User[]
+  permissions_roles PermissionsRole[]
+    @@map("roles")
+}
+
+model User {
+  id_user         Int    @id @default(autoincrement())
+  username        String @unique
+  bio             String?
+  mail            String @unique
+  password        String
+  profile_picture String?
+  id_role         Int     
+  role            Role @relation(fields: [id_role], references: [id_role])
+  social_networks SocialNetwork[]
+  articles        Article[]
+  comments        Comment[]
+  user_likes      UserLike[]
+  notifications   Notification[]
+  created_categories CreatedCategory[]
+  collections     Collection[]
+  @@map("users")
+}
+
+model SocialNetwork {
+  id_network Int    @id @default(autoincrement())
+  name       String
+  link       String?
+  id_user    Int
+  user       User @relation(fields: [id_user], references: [id_user])
+    @@map("social_networks")
+}
+
+model Permission {
+  id_permission   Int    @id @default(autoincrement())
+  name            String @unique
+  write_permission Boolean
+  read_permission  Boolean
+  permissions_roles PermissionsRole[]
+  @@map("permissions")
+}
+
+model PermissionsRole {
+  id_role       Int
+  id_permission Int
+  role          Role       @relation(fields: [id_role], references: [id_role])
+  permission    Permission @relation(fields: [id_permission], references: [id_permission])
+  @@id([id_role, id_permission])
+    @@map("permissions_roles")
+}
+
+model Article {
+  id_article        Int    @id @default(autoincrement())
+  title            String?
+  content          String
+  image            String?
+  creation_date    DateTime @default(now())
+  modification_date DateTime?
+  id_user          Int
+  user             User @relation(fields: [id_user], references: [id_user])
+  comments         Comment[]
+  likes            Like[]
+  categories       ArticleCategory[]
+  collections      Collection[]
+    @@map("articles")
+}
+
+model Category {
+  id_category Int    @id @default(autoincrement())
+  name        String @unique
+  article_categories ArticleCategory[] 
+  created_categories CreatedCategory[]
+    @@map("categories")
+}
+
+model ArticleCategory {
+  id_article  Int
+  id_category Int
+  article     Article  @relation(fields: [id_article], references: [id_article])
+  category    Category @relation(fields: [id_category], references: [id_category])
+  @@id([id_article, id_category])
+    @@map("article_category")
+}
+
+model CreatedCategory {
+  id_user     Int
+  id_category Int
+  user        User     @relation(fields: [id_user], references: [id_user])
+  category    Category @relation(fields: [id_category], references: [id_category])
+  @@id([id_user, id_category])
+    @@map("created_category")
+}
+
+model Comment {
+  id_comment    Int    @id @default(autoincrement())
+  content       String
+  creation_date DateTime @default(now())
+  id_user       Int
+  id_article    Int
+  user          User    @relation(fields: [id_user], references: [id_user])
+  article       Article @relation(fields: [id_article], references: [id_article])
+    @@map("comments")
+}
+
+model Like {
+  id_like   Int    @id @default(autoincrement())
+  like_date DateTime @default(now())
+  id_article Int
+  article    Article @relation(fields: [id_article], references: [id_article])
+  user_likes UserLike[]
+    @@map("likes")
+}
+
+model UserLike {
+  id_user  Int
+  id_like  Int
+  user     User @relation(fields: [id_user], references: [id_user])
+  like     Like @relation(fields: [id_like], references: [id_like])
+  @@id([id_user, id_like])
+    @@map("user_likes")
+}
+
+model Notification {
+  id_notification   Int    @id @default(autoincrement())
+  type             String
+  message         String?
+  notification_date DateTime @default(now())
+  read_status     Boolean
+  id_user         Int
+  user           User @relation(fields: [id_user], references: [id_user])
+    @@map("notifications")
+}
+
+model Collection {
+  id_user    Int
+  id_article Int
+  user       User    @relation(fields: [id_user], references: [id_user])
+  article    Article @relation(fields: [id_article], references: [id_article])
+  @@id([id_user, id_article])
+    @@map("collection")
+}
