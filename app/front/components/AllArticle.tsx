@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react'
 import { Article } from '../types/Types'
 import Link from 'next/link';
+import Header from './Header';
+import Sidebar from './Sidebar';
 
 export function AllArticles() {
     const [articles, setArticles] = useState<Article[]>([]);
@@ -28,17 +30,23 @@ export function AllArticles() {
 
 
     return (
-        <main className='text-2xl font-bold mb-4'>
-            {articles.map(article => (
-                <div key={article.id_article} className="border-b py-4">
-                    <h4 className='font-semibold'><Link href={`articles/${article.id_article}`}>{article.title}</Link></h4>
-                    <p className='text-gray-600'>{article.content.substring(0, 100)}...</p>
-                    {/* <div> */}
-                    <p className="text-sm  mt-2"><Link href={`users/${article.user?.id_user}`}>{article.user?.username}</Link></p>
-                    <p>{new Date(article.creation_date).toLocaleDateString()}</p>
-                    {/* </div> */}
+        <div className="flex">
+            <Header username="Utilisateur" />
+            <Sidebar />
+            <main className='flex-grow p-8 ml-64 mt-16 bg-gray-100"'>
+                <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+                    {articles.map(article => (
+                        <div key={article.id_article} className="border-b py-4">
+                            <h4 className='font-semibold'><Link href={`articles/${article.id_article}`}>{article.title}</Link></h4>
+                            <p className='text-gray-600'>{article.content.substring(0, 100)}...</p>
+                            {/* <div> */}
+                            <p className="text-sm  mt-2"><Link href={`users/${article.user?.id_user}`}>{article.user?.username}</Link></p>
+                            <p>{new Date(article.creation_date).toLocaleDateString()}</p>
+                            {/* </div> */}
+                        </div>
+                    ))}
                 </div>
-            ))}
-        </main >
+            </main >
+        </div>
     );
 }

@@ -2,23 +2,30 @@
 
 import { useState } from "react";
 
-export default function LikeButton({ id_article, id_user }: { id_article: string; id_user: string }) {
+export default function LikeButton({ id_article, initialLikes }: { id_article: string; initialLikes: number }) {
+    const [likes, setLikes] = useState(initialLikes)
     const [liked, setLiked] = useState(false);
 
 
     const handleLike = async () => {
-        const response = await fetch('http://localhost:3000/api/likes', {
-            method: 'POST',
-            body: JSON.stringify({ id_article, id_user }),
-        });
+        try {
+            const response = await fetch('http://localhost:3000/api/likes', {
+                method: 'POST',
+            });
 
-        if (!response.ok) { setLiked(!liked) }
+            if (!response.ok) {
+                setLikes(liked ? likes - 1 : likes + 1);
+                setLiked(!liked)
+            }
+        } catch (error) {
+            console.error("Erreur lors du like:", error)
+        }
     }
 
 
     return (
         <button onClick={handleLike} className={`px-3 py-1 rounded ${liked ? "bg-red-500 text-white" : "bg-gray-200"}`}>
-            {liked ? "❤️ Unlike" : "🤍 Like"}
+            ❤️ {likes}
         </button>
-    )
+    );
 }

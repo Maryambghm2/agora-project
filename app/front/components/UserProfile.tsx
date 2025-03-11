@@ -63,10 +63,12 @@ export default function UserPage() {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold">{user.username}</h1>
-                <p className="text-gray-600">{user.bio || "Aucune bio renseignée"}</p>
+                <div className="p-4">
+                  <p className="text-gray-600">{user.bio || "Aucune bio renseignée"}</p>
+                </div>
               </div>
               <img
-                src={user.profile_picture || "/default-avatar.png"}
+                src={user.profile_picture || "/profil.png"}
                 width={80}
                 height={80}
                 alt="Avatar"
@@ -80,7 +82,7 @@ export default function UserPage() {
               <div className="flex gap-3 mt-2">
                 {user.social_networks.map((network) => (
                   <a key={network.name} href={network.link || "#"} target="_blank" rel="noopener noreferrer">
-                    <img src={`/icons/${network.name}.svg`} alt={network.name} width={30} height={30} />
+                    <img src={`/${network.name}.png`} alt={network.name} width={30} height={30} />
                   </a>
                 ))}
               </div>
@@ -92,6 +94,9 @@ export default function UserPage() {
               <p className="text-gray-700">{user.mail}</p>
             </div>
 
+
+{/* {Categories } */}
+
             {/* Articles */}
             <div className="mt-6">
               <h2 className="text-xl font-bold">Mes articles :</h2>
@@ -102,6 +107,7 @@ export default function UserPage() {
                       <h3 className="font-semibold">{article.title || "Sans titre"}</h3>
                       <p className="text-gray-500 text-sm">{article.content.slice(0, 100)}...</p>
                       <span className="text-gray-400 text-xs">{new Date(article.creation_date).toLocaleDateString()}</span>
+                      {/* <span>{article.categories?.category?.name}</span> */}
                     </li>
                   ))}
                 </ul>

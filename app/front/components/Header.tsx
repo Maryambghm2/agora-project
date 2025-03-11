@@ -1,4 +1,3 @@
-import { FaSearch, FaBell, FaUser } from "react-icons/fa";
 
 interface HeaderProps {
   username: string;
@@ -16,11 +15,11 @@ export default function Header({ username }: HeaderProps) {
       </div>
       <div className="flex items-center space-x-4">
         <button className="relative">
-          🔔
+          <img src="/cloche.png" width={24} height={24} alt="Notifications"/>
           {/* <span className="absolute top-0 right-0 bg-red-500 text-xs px-1 rounded-full">3</span> */}
         </button>
-        <div className="flex items-center space-x-2">
-          <img src="/default-avatar.png" width={32} height={32} alt="Avatar" className="rounded-full" />
+        <div className="flex items-center flex-col space-x-2">
+          <img src="/profil.png" width={24} height={24} alt="Avatar" className="rounded-full" />
           <span>{username}</span>
         </div>
       </div>

@@ -4,7 +4,7 @@ import { withAuth } from "../middleware/route";
 
 const prisma = new PrismaClient();
 
-export const GET = async (req: any)  =>  {
+export const GET = async (req: any) => {
     try {
         const articles = await prisma.article.findMany({
             include: {
@@ -14,7 +14,23 @@ export const GET = async (req: any)  =>  {
                         username: true,
                     }
                 },
+                _count: {
+                    select: {
+                        comments: true
+                    }
+                },
+                categories: {
+                    include: {
+                        category: {
+                            select: {
+                                id_category: true,
+                                name: true
+                            }
+                        }
+                    }
+                },
             },
+            
             orderBy: {
                 creation_date: "desc"
             },

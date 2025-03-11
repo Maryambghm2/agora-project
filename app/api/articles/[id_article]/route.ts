@@ -21,6 +21,49 @@ export async function GET(req: Request, { params }: { params: Promise<{ id_artic
                         username: true,
                     },
                 },
+                _count: {
+                    select: {
+                        likes: true
+                    }
+                },
+                likes: {
+                    include: {
+                        user_likes: {
+                            include: {
+                                user: {
+                                    select: {
+                                        id_user: true, username: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                },
+                comments: {
+                    select: {
+                        id_comment: true,
+                        creation_date: true,
+                        content: true,
+                        user: {
+                            select: {
+                                id_user: true,
+                                username: true,
+                            }
+                        }
+                    },
+                    orderBy: { creation_date: "desc" }
+                },
+                categories: {
+                    select: {
+                        category: {
+                            select: {
+                                id_category: true,
+                                name: true
+                            }
+                        }
+                    }
+                }
             },
         });
         return NextResponse.json(article)
@@ -31,7 +74,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id_artic
 }
 
 // Route modifier article 
-export const PUT = withAuth(async(req: any, { params }: { params: Promise<{ id_article: string }> }) => {
+export const PUT = withAuth(async (req: any, { params }: { params: Promise<{ id_article: string }> }) => {
 
     const id_article = parseInt((await params).id_article)
 
@@ -43,13 +86,13 @@ export const PUT = withAuth(async(req: any, { params }: { params: Promise<{ id_a
 
         const { title, content } = await req.json();
 
-         // Vérifier que les champs title et content existent
-         if (!content) {
+        // Vérifier que les champs title et content existent
+        if (!content) {
             return NextResponse.json({ error: "Veuillez fournir un contenu" }, { status: 400 });
         }
 
         const article = await prisma.article.findUnique({
-            where: { id_article},
+            where: { id_article },
         });
 
         if (!article) {
@@ -89,8 +132,8 @@ export const DELETE = withAuth(async (req: any, { params }: { params: Promise<{ 
         }
 
 
-        const userRole = req.user?.role.name; 
-        if(verifArticle.id_user !== req.user?.id_user && userRole!== 'Administrateur' && userRole !== 'Modérateur') {
+        const userRole = req.user?.role.name;
+        if (verifArticle.id_user !== req.user?.id_user && userRole !== 'Administrateur' && userRole !== 'Modérateur') {
             return NextResponse.json({ error: "Vous n'êtes pas autorisé à supprimer cet article" }, { status: 403 });
         }
         // Suppression de l'article 
