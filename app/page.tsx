@@ -1,12 +1,8 @@
-// import AskQuestionButton from "./front/components/ButtonCreateQuestions";
-// import Layout from "./front/components/Layout";
+import LoginFunc from "./front/components/Login";
 
+export default function Login() {
 
-// export default function Home() {
-//   return (
-//     <Layout>
-//       <QuestionsList />
-//       <AskQuestionButton />
-//     </Layout>
-//   );
-// }
+    return (
+        <LoginFunc />
+    )
+}

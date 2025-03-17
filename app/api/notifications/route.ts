@@ -1,30 +1,43 @@
-import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
+import { db } from "../lib/db";
 
-const prisma = new PrismaClient;
+export async function GET(req: NextRequest) {
+    const token = await getToken({ req });
 
-export async function GET() {
-try {
-    const notifications = await prisma.notification.findMany()
-
-    return NextResponse.json(notifications);
-} catch (error) {
-    return NextResponse.json({error: "Erreur lors de l'affichage des notifications"}, {status: 500});
-}
-}
-
-export async function POST(req: Request) {
-    const { id_user, type, message } = await req.json();
-
+    if (!token || isNaN(Number(token.sub))) {
+        return NextResponse.json({ error: "Utilisateur non authentifié" }, { status: 401 });
+    }
 
     try {
-        const notification = await prisma.notification.create({
-            data: { id_user, type, message, read_status: false },
+        const notifications = await db.notification.findMany({
+            where: { userId: Number(token.sub) },
+            orderBy: { notification_date: "desc" },
         });
 
-        return NextResponse.json(notification, { status: 201 });
+        return NextResponse.json(notifications, { status: 200 });
 
     } catch (error) {
-        return NextResponse.json({ error: "Erreur lors de la notification" }, { status: 500 });
+        return NextResponse.json({ error: "Erreur lors de la récupération des notifications" }, { status: 500 });
+    }
+};
+
+export async function PUT(req: NextRequest) {
+    const token = await getToken({ req });
+
+    if (!token || isNaN(Number(token.sub))) {
+        return NextResponse.json({ error: "Utilisateur non authentifié" }, { status: 401 });
+    }
+
+    try {
+        await db.notification.updateMany({
+            where: { userId: Number(token.sub), read_status: false },
+            data: { read_status: true },
+        });
+
+        return NextResponse.json({ message: "Notifications marquées comme lues" }, { status: 200 });
+
+    } catch (error) {
+        return NextResponse.json({ error: "Erreur lors de la mise à jour des notifications" }, { status: 500 });
     }
 }

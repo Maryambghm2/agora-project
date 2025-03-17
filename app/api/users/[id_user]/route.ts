@@ -1,43 +1,39 @@
-import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
-import { withAuth } from "../../middleware/route";
+import { NextRequest, NextResponse } from "next/server";
+import { db } from "../../lib/db";
+import { getToken } from "next-auth/jwt";
 
-
-const prisma = new PrismaClient();
-
-export const GET = async (req: Request, { params }: { params: Promise<{ id_user: string }> }) => {
-    const id_user = parseInt((await params).id_user)
+export async function GET(req: NextRequest) {
     try {
-        const user = await prisma.user.findUnique({
-            where: { id_user: Number(id_user) },
-            include: {
-                articles: {
+
+        const token = await getToken({ req });
+
+        if (!token || isNaN(Number(token.id))) {
+            return NextResponse.json({ error: "ID utilisateur invalide" }, { status: 400 });
+        }
+        const users = await db.user.findUnique({
+            where: {
+                id_user: Number(token.id)
+            },
+            select: {
+                username: true, id_user: true, mail: true, roleId: true,
+                role: {
                     select: {
-                        id_article: true,
-                        title: true,
-                        content: true,
+                        name:true
                     }
                 },
                 social_networks: {
                     select: {
-                        id_network: true,
                         name: true,
-                        link: true
+                        link: true,
+                        
                     }
-
                 }
             }
         })
-
-        if (!user) {
-            return NextResponse.json({ error: "Utilisateur non trouvé" }, { status: 404 });
-        }
-
-
-        return NextResponse.json(user)
+        return NextResponse.json(users);
     } catch (error) {
-        console.error("Erreur lors de l'affichage de l'utilisateur:", error)
-        return NextResponse.json({ error: "Erreur lors de l'affichage de l'utilisateur" }, { status: 500 })
+        console.error("Erreur lors de la récupération des données :", error);
+        return NextResponse.json({ error: "Erreur lors de la récupération des utilisateurs" }, { status: 500 });
     }
+}
 
-};

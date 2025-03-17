@@ -12,8 +12,8 @@ export function LinkRegister() {
 
 export function LinkLogin() {
     return (
-        <div>
-            <p>Déja inscrit ? <Link href={'/front/login'}>Se connecter</Link></p>
+        <div className="">
+            <p>Déja inscrit ? <Link href={'/front/login'}><span>Se connecter</span></Link></p>
         </div>
     )
 }

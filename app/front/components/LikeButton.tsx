@@ -1,31 +1,78 @@
 'use client'
+import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { useParams } from 'next/navigation';
+import { CustomUser } from '../types/page';
 
-import { useState } from "react";
-
-export default function LikeButton({ id_article, initialLikes }: { id_article: string; initialLikes: number }) {
-    const [likes, setLikes] = useState(initialLikes)
+export default function LikeButton({ articleId, onLikeChange }: { articleId: string, onLikeChange: () => void }) {
+    const { data: session } = useSession();
+    const { id_category } = useParams();
     const [liked, setLiked] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const userSession = session?.user as CustomUser;
+    const userId = userSession?.id;
 
+  
+    const toggleLike = async () => {
+        if (!userId) return;
 
-    const handleLike = async () => {
+        setLoading(true);
+
         try {
-            const response = await fetch('http://localhost:3000/api/likes', {
+            const response = await fetch(`/api/categories/${id_category}/articles/${articleId}/likes/new`, {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             });
 
-            if (!response.ok) {
-                setLikes(liked ? likes - 1 : likes + 1);
-                setLiked(!liked)
+            if (response.ok) {
+                setLiked(!liked);
+                onLikeChange(); 
+            } else {
+                console.error('Erreur lors du like/delike');
             }
         } catch (error) {
-            console.error("Erreur lors du like:", error)
+            console.error('Erreur de réseau', error);
+        } finally {
+            setLoading(false);
         }
-    }
+    };
 
+    // Vérifier l'état du like à chaque rendu
+    useEffect(() => {
+        const checkIfLiked = async () => {
+            if (!userId) return;
+
+            try {
+                const response = await fetch(`/api/categories/${id_category}/articles/${articleId}/likes`);
+                const data = await response.json();
+                const isLiked = data.usersWhoLiked.some((user: { id_user: number }) => user.id_user === Number(userId));
+                setLiked(isLiked);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des likes', error);
+            }
+        };
+
+        checkIfLiked();
+    }, [userId, articleId, id_category]);
 
     return (
-        <button onClick={handleLike} className={`px-3 py-1 rounded ${liked ? "bg-red-500 text-white" : "bg-gray-200"}`}>
-            ❤️ {likes}
-        </button>
+        <div className="mt-4 flex items-center space-x-2">
+            <button
+                onClick={toggleLike}
+                disabled={loading}
+                className={`px-4 py-2 rounded-lg text-white transition ${liked ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-400 hover:bg-gray-500'
+                    }`}
+            >
+                {liked ? '❤️' : '🤍'}
+            </button>
+            <button
+                onClick={toggleLike}
+                className="px-4 py-2 rounded-lg bg-gray-500 hover:bg-gray-600 text-white transition"
+            >
+                
+            </button>
+        </div>
     );
-}
+};

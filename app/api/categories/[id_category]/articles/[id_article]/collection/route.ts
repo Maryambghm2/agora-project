@@ -1,0 +1,58 @@
+import { NextRequest, NextResponse } from "next/server";
+import { db } from "../../../../../lib/db";
+import { getToken } from "next-auth/jwt";
+
+export const GET = (async (req: NextRequest, { params }: { params: { id_article: string } }) => {
+    try {
+        const { id_article } = await params;
+        const articleId = Number(id_article);
+
+        if (!articleId) {
+            return NextResponse.json({ error: "L'ID de l'article est requis." }, { status: 400 });
+        }
+        const token = await getToken({ req });
+
+        if (!token || isNaN(Number(token.id))) {
+            return NextResponse.json({ error: "ID utilisateur invalide" }, { status: 400 });
+        }
+
+        const userId = Number(token.id);
+
+        if (!userId) {
+            return NextResponse.json({ error: "L'ID de l'utilisateur est requis." }, { status: 400 });
+        }
+
+        const collections = await db.collection.findMany({
+            where: { id_user: userId },
+            include: {
+                article: {
+                    select: {
+                        id_article: true,
+                        title: true,
+                        content: true,
+                        creation_date: true,
+                        modification_date: true,
+                        _count: {
+                            select: { comments: true }
+                        },
+                        category: {
+                            select: {
+                                id_category: true,
+                                name: true,
+                            }
+
+                        }
+                    },
+                }, user: {
+                    select: {
+                        username: true,
+                    }
+                },
+            },
+        })
+
+        return NextResponse.json(collections, { status: 201 });
+    } catch (error) {
+        return NextResponse.json({ error: "Erreur sur l'affichage de la collection" }, { status: 500 })
+    }
+})

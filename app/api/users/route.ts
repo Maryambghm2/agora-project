@@ -1,14 +1,14 @@
-import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { db } from "../lib/db";
 
-const prisma = new PrismaClient();
 
 export async function GET() {
     try {
-        const users = await prisma.user.findMany();
+        const users = await db.user.findMany();
         return NextResponse.json(users);
     } catch (error) {
         console.error("Erreur lors de la récupération des données :", error);
         return NextResponse.json({ error: "Erreur lors de la récupération des utilisateurs" }, { status: 500 });
     }
 }
+

@@ -1,5 +1,5 @@
-import UserProfile from "../../components/UserProfile";
+import UserPage from "../../components/UserProfile";
 
-export default function UserSpec() {
-   return <UserProfile />
+export default function Profile() {
+    return <UserPage />
 }
