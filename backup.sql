@@ -471,8 +471,8 @@ e769e1da-6f09-4fec-a336-96cba88ee430	ca23e77ef60c551d0f0830a8672ae389885c8686a3e
 --
 
 COPY public.articles (id_article, title, content, creation_date, modification_date, "userId", "categoryId") FROM stdin;
-1	Capteurs IoT et r?�seaux	Probl?�me de communication avec mes capteurs	2025-03-18 10:55:59.877	\N	2	10
-2	Erreur 500 sur mon API	Mon API Express renvoie une erreur 500 sans aucun message explicite. J���ai activ?� les logs en mode debug, mais je ne parviens pas ?� identifier la source du probl?�me. J���utilise PostgreSQL comme base de donn?�es et Sequelize pour l���ORM. Mon endpoint `/articles` fonctionne bien en local, mais plante en production. Une id?�e de ce qui pourrait causer ce souci ?	2025-03-18 13:13:41.815	\N	3	3
+1	Capteurs IoT et réseaux	Probl?�me de communication avec mes capteurs	2025-03-18 10:55:59.877	\N	2	10
+2	Erreur 500 sur mon API	Mon API Express renvoie une erreur 500 sans aucun message explicite. Jai activé les logs en mode debug, mais je ne parviens pas ?� identifier la source du probl?�me. J���utilise PostgreSQL comme base de donn?�es et Sequelize pour l���ORM. Mon endpoint `/articles` fonctionne bien en local, mais plante en production. Une id?�e de ce qui pourrait causer ce souci ?	2025-03-18 13:13:41.815	\N	3	3
 \.
 
 
@@ -481,14 +481,14 @@ COPY public.articles (id_article, title, content, creation_date, modification_da
 --
 
 COPY public.categories (id_category, name, "userId") FROM stdin;
-1	R?�seaux	2
-2	D?�veloppement Web	2
-3	Cybers?�curit?�	2
+1	Réseaux	2
+2	Développement Web	2
+3	Cybersécurité	2
 4	Cloud Computing	2
 5	Intelligence Artificielle	2
-6	Bases de Donn?�es	2
-7	D?�veloppement Mobile	2
-8	Syst?�mes d���Exploitation	2
+6	Bases de Données	2
+7	Développement Mobile	2
+8	Systèmes d���Exploitation	2
 9	DevOps	2
 10	IoT	2
 \.
@@ -509,7 +509,7 @@ COPY public.collection ("articleId", id_collection, "userId") FROM stdin;
 
 COPY public.comments (id_comment, content, creation_date, "userId", "articleId") FROM stdin;
 1	Up	2025-03-18 12:20:21.84	2	1
-2	V?�rifiez si vos capteurs IoT sont correctement connect?�s au r?�seau local et si l���adresse IP du serveur est correcte.	2025-03-18 13:14:10.669	3	1
+2	V?�rifiez si vos capteurs IoT sont correctement connectés au réseau local et si l���adresse IP du serveur est correcte.	2025-03-18 13:14:10.669	3	1
 \.
 
 
@@ -527,7 +527,7 @@ COPY public.likes (id_like, like_date, "articleId", "userId") FROM stdin;
 --
 
 COPY public.notifications (id_notification, type, message, notification_date, read_status, "userId") FROM stdin;
-1	comment	Vous avez re?�u un nouveau commentaire sur votre article Capteurs IoT et r?�seaux.	2025-03-18 13:14:10.709	t	2
+1	comment	Vous avez reçu un nouveau commentaire sur votre article Capteurs IoT et réseaux.	2025-03-18 13:14:10.709	t	2
 \.
 
 
