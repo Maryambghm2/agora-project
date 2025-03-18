@@ -24,3 +24,6 @@ EXPOSE 3000
 
 # Démarrer l'application
 CMD ["npm", "start"]
+
+
+ENV DATABASE_URL=$DATABASE_URL
