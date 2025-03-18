@@ -5,7 +5,7 @@ import NextAuth from "next-auth";
 
 const prisma = new PrismaClient();
 
-export const authOptions = {
+const handler = NextAuth({
     providers: [
         CredentialsProvider({
             name: "Credentials",
@@ -65,9 +65,6 @@ export const authOptions = {
         signOut: "/logout",
     },
     secret: process.env.NEXTAUTH_SECRET,
-};
-
-
-const handler = NextAuth(authOptions);
+});
 
 export { handler as GET, handler as POST };

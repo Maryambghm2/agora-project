@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
 
-export async function GET(req: Request, { params }: { params: { id_user: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id_user: string }> }) {
     const { id_user } = await params;
     const userId = Number(id_user);
 

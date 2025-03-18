@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "../../../lib/db";
 
-export async function GET(req: NextRequest, { params }: { params: { id_category: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id_category: string }> }) {
     try {
         const { id_category } = await params;
         const categoryId = Number(id_category);

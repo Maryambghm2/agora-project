@@ -2,7 +2,7 @@ import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "../../../../../lib/db";
 
-export async function GET(req: NextRequest, { params }: { params: { id_article: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id_article: string }> }) {
     try {
         const { id_article } = await params;
         const articleId = Number(id_article);
@@ -22,7 +22,7 @@ export async function GET(req: NextRequest, { params }: { params: { id_article: 
             }
         });
 
-        const usersWhoLiked = likes.map(like => like.user);
+        const usersWhoLiked = likes.map((like: any) => like.user);
         const totalLikes = likes.length;
 
         return NextResponse.json({ totalLikes, usersWhoLiked }, { status: 200 });

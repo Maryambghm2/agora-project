@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { db } from "../../../../../lib/db";
 
-export async function GET({ params }: { params: { id_article: string } }) {
+export async function GET(req:NextRequest, { params }: { params: Promise<{ id_article: string }> }) {
     try {
         const { id_article } = await params;
         const articleId = Number(id_article);

@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "../../../../lib/db";
 
 // Créer un article 
-export async function POST(req: NextRequest, { params }: { params: { id_category: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id_category: string }> }) {
     try {
 
          const {id_category } = await params;

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "../../../../../lib/db";
 import { getToken } from "next-auth/jwt";
 
-export const GET = (async (req: NextRequest, { params }: { params: { id_article: string } }) => {
+export const GET = (async (req: NextRequest, { params }: { params: Promise<{ id_article: string }> }) => {
     try {
         const { id_article } = await params;
         const articleId = Number(id_article);
