@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import { CustomUser } from '../types/page';
 
-export default function LikeButton({ articleId, onLikeChange }: { articleId: string, onLikeChange: () => void }) {
+export default function LikeButton({ articleId, onChangeArticle }: { articleId: string, onChangeArticle: () => void }) {
     const { data: session } = useSession();
     const { id_category } = useParams();
     const [liked, setLiked] = useState(false);
@@ -28,7 +28,7 @@ export default function LikeButton({ articleId, onLikeChange }: { articleId: str
 
             if (response.ok) {
                 setLiked(!liked);
-                onLikeChange(); 
+                onChangeArticle(); 
             } else {
                 console.error('Erreur lors du like/delike');
             }

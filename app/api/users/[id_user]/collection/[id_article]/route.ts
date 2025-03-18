@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "../../../../../lib/db";
 import { getToken } from "next-auth/jwt";
+import { db } from "../../../../lib/db";
 
-export const GET = (async (req: NextRequest, { params }: { params: { id_article: string } }) => {
+export async function GET(req: NextRequest, { params }: { params: { id_article: string } }) {
     try {
+
         const { id_article } = await params;
         const articleId = Number(id_article);
 
@@ -23,7 +24,7 @@ export const GET = (async (req: NextRequest, { params }: { params: { id_article:
         }
 
         const collections = await db.collection.findMany({
-            where: { userId: userId },
+            where: { userId, articleId },
             include: {
                 article: {
                     select: {
@@ -32,6 +33,7 @@ export const GET = (async (req: NextRequest, { params }: { params: { id_article:
                         content: true,
                         creation_date: true,
                         modification_date: true,
+
                         category: {
                             select: {
                                 id_category: true,
@@ -47,10 +49,11 @@ export const GET = (async (req: NextRequest, { params }: { params: { id_article:
                 },
             },
         })
-
+        // console.log(collections)
         return NextResponse.json(collections, { status: 201 });
     } catch (error) {
         return NextResponse.json({ error: "Erreur sur l'affichage de la collection" }, { status: 500 })
     }
-})
+}
+
 

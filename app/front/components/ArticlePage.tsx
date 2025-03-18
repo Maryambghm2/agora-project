@@ -10,6 +10,8 @@ import AddComment from "./AddComment";
 import LikeButton from "./LikeButton";
 import { useSession } from "next-auth/react";
 import AddCollection from "./AddCollection";
+import EditArticle from "./EditArticle";
+import { DeleteArticle } from "./DeleteArticleButton";
 
 export default function ArticlePage() {
     const { id_article, id_category } = useParams();
@@ -18,14 +20,18 @@ export default function ArticlePage() {
     const [likes, setLikes] = useState<number>(0);
     const [usersWhoLiked, setUsersWhoLiked] = useState<any[]>([]);
     const [modalOpen, setModalOpen] = useState(false);
-    const [isInCollection, setIsInCollection] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const { data: session } = useSession();
 
     const userSession = session?.user as CustomUser;
-    const userId = userSession?.id;
+    const userId = Number(userSession?.id);
+    const userRole = Number(userSession?.role)
+
+    // console.log(userSession)
+    // console.log(session)
 
     const fetchArticle = async () => {
         if (!id_article || !id_category) {
@@ -57,25 +63,9 @@ export default function ArticlePage() {
         }
     };
 
-    const checkIfInCollection = async () => {
-        try {
-            const response = await fetch(`/api/categories/${id_category}/articles/${id_article}/collection`)
-            const data = await response.json();
-            // Vérifie si l'article fait déjà partie de la collection
-            if (Array.isArray(data)) {
-                setIsInCollection(data.some((collection: any) => collection.id_article === id_article));
-            } else {
-                setIsInCollection(data)
-            }
-        } catch (error) {
-            console.error("Erreur lors de la vérification de la collection", error);
-        }
-    };
-
     useEffect(() => {
         fetchArticle();
         fetchLikes();
-        checkIfInCollection();
     }, [id_article, id_category]);
 
     if (loading) return <div>Chargement de l'article...</div>;
@@ -89,32 +79,67 @@ export default function ArticlePage() {
 
             <main className="flex-grow p-8 ml-64 mt-16 bg-gray-100">
                 <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
-                    {/* Titre */}
-                    <h1 className="text-3xl font-bold mb-4">{article.title}</h1>
 
-                    {/* Image si disponible */}
-                    {article.image && (
-                        <img
-                            src={`/pic/${article.image}`}
-                            alt={article.title}
-                            className="w-full h-auto max-h-96 object-cover rounded-lg mb-4"
-                        />
+                    {userId === article.user.userId && (
+                        <div className="flex flex-row justify-between">
+                            <button onClick={() => setIsEditing(!isEditing)} className="text-gray-500 hover:text-gray-700">
+                                ✏️
+                            </button>
+                            <DeleteArticle
+                                articleId={article.id_article}
+                                userId={userId}
+                                userRole={userRole}
+                                categoryId={Number(id_category)}
+                            />
+                        </div>
                     )}
 
-                    {/* Contenu */}
-                    <p className="text-gray-700 leading-relaxed">{article.content}</p>
+                    <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+                        {isEditing ? (
+                            <EditArticle
+                                articleId={article.id_article}
+                                currentTitle={article.title}
+                                currentContent={article.content}
+                                authorId={userId}
+                                categoryId={Number(id_category)}
+                                onCancel={() => setIsEditing(false)} // Ajout d'une fonction d'annulation
+                                onSuccess={() => {
+                                    setIsEditing(false);
+                                    fetchArticle(); // Recharger l'article après modification
+                                }}
+                            />
+                        ) : (
+                            <>
+                                {/* Titre */}
+                                <h1 className="text-3xl font-bold mb-4">{article.title}</h1>
 
-                    {/* Auteur & Date */}
-                    <div className="mt-6 flex justify-between items-center text-gray-500 text-sm">
-                        <Link href={`/users/${article.user?.id_user}`} className="hover:underline">
-                            Publié par : {article.user?.username}
-                        </Link>
-                        <span>{new Date(article.creation_date).toLocaleDateString()}</span>
+                                {/* Image si disponible */}
+                                {article.image && (
+                                    <img
+                                        src={`/pic/${article.image}`}
+                                        alt={article.title}
+                                        className="w-full h-auto max-h-96 object-cover rounded-lg mb-4"
+                                    />
+                                )}
+
+                                {/* Contenu */}
+                                <p className="text-gray-700 leading-relaxed">{article.content}</p>
+
+                                {/* Auteur & Date */}
+                                <div className="mt-6 flex justify-between items-center text-gray-500 text-sm">
+                                    <Link href={`/users/${article.user?.userId}`} className="hover:underline">
+                                        Publié par : {article.user?.username}
+                                    </Link>
+                                    <span>{new Date(article.creation_date).toLocaleDateString()}</span>
+                                </div>
+                            </>
+                        )}
                     </div>
+
 
                     {/* LikeButton */}
                     <div className="mt-4 flex items-center">
-                        <LikeButton articleId={id_article as string} onLikeChange={fetchLikes} />
+                        <LikeButton articleId={id_article as string} onChangeArticle={fetchLikes} />
                         {usersWhoLiked.length > 0 && (
                             <button
                                 className="ml-4 text-gray-500 hover:underline"
@@ -147,7 +172,8 @@ export default function ArticlePage() {
                         </div>
                     </div>
                 )}
-                <AddCollection articleId={Number(id_article)} userId={Number(userId)} isInCollection={isInCollection} categoryId={Number(id_category)} />
+                <AddCollection articleId={Number(id_article)} categoryId={Number(id_category)} />
+
                 <div>
                     <AddComment
                         articleId={id_article as string}

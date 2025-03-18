@@ -12,10 +12,14 @@ export async function POST(req: NextRequest, { params }: { params: { id_category
 
         const token = await getToken({ req });
 
-        if (!token || isNaN(Number(token.sub))) {
+        if (!token || isNaN(Number(token.id))) {
             return NextResponse.json({ error: "ID utilisateur invalide" }, { status: 400 });
         }
-        const { title, content } = await req.json()
+
+        const userId = Number(token.id);
+
+        
+        const { title, content } = await req.json();
 
         if (!title || !content) {
             return NextResponse.json({ error: "Veuillez ajouter un titre et un contenu" }, { status: 400 })
@@ -26,7 +30,7 @@ export async function POST(req: NextRequest, { params }: { params: { id_category
             data: {
                 title,
                 content,
-                userId: Number(token?.sub),
+                userId,
                 creation_date: new Date(),
                 categoryId: categoryId,
             },

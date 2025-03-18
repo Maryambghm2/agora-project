@@ -28,16 +28,21 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">Inscription</h1>
-      {error && <p className="text-red-500">{error}</p>}
-      <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-        <input type="text" placeholder="Nom d'utilisateur" value={username} onChange={(e) => setUsername(e.target.value)} className="border p-2 rounded" />
-        <input type="email" placeholder="Email" value={mail} onChange={(e) => setEmail(e.target.value)} className="border p-2 rounded" />
-        <input type="password" placeholder="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} className="border p-2 rounded" />
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">S'inscrire</button>
-      <LinkLogin/>
-      </form>
-    </div>
+    <>
+      <aside>
+        <h1 className="text-xl font-bold p-3">Agora Community</h1>
+      </aside>
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <h1 className="text-2xl font-bold mb-4">Inscription</h1>
+        {error && <p className="text-red-500">{error}</p>}
+        <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
+          <input type="text" placeholder="Nom d'utilisateur" value={username} onChange={(e) => setUsername(e.target.value)} className="border p-2 rounded" />
+          <input type="email" placeholder="Email" value={mail} onChange={(e) => setEmail(e.target.value)} className="border p-2 rounded" />
+          <input type="password" placeholder="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} className="border p-2 rounded" />
+          <button type="submit" className="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded">S'inscrire</button>
+          <LinkLogin />
+        </form>
+      </div>
+    </>
   );
 }

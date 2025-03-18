@@ -9,21 +9,20 @@ export async function POST(req: NextRequest) {
         if (!token || Number(token.role) !== 1) {
             return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
         }
-     
+
         const { name } = await req.json();
 
         if (!name) {
             return NextResponse.json({ error: "Nom requis" }, { status: 400 });
         }
-        // console.log(name);
 
-        if (!token.sub || isNaN(Number(token.sub))) {
+        if (!token.id || isNaN(Number(token.id))) {
             return NextResponse.json({ error: "ID utilisateur invalide" }, { status: 400 });
         }
-        // console.log(Number(token.sub));
 
+        const userId = Number(token.id);
         const category = await db.category.create({
-            data: { name, userId: Number(token.sub) }
+            data: { name, userId }
         })
         return NextResponse.json(category, { status: 201 })
     } catch (error) {

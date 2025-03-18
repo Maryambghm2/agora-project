@@ -28,21 +28,6 @@ export async function GET(req: NextRequest, { params }: { params: { id_category:
             include: {
                 user: { select: { id_user: true, username: true } },
                 _count: { select: { likes: true } },
-                likes: {
-                    select: {
-                        like_date: true, userId:true, articleId:true
-
-                    }
-                },
-                comments: {
-                    select: {
-                        id_comment: true,
-                        creation_date: true,
-                        content: true,
-                        user: { select: { id_user: true, username: true } }
-                    },
-                    orderBy: { creation_date: "desc" }
-                },
             },
         });
 

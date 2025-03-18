@@ -18,16 +18,9 @@ export async function GET(req: NextRequest) {
                 username: true, id_user: true, mail: true, roleId: true,
                 role: {
                     select: {
-                        name:true
+                        name: true
                     }
                 },
-                social_networks: {
-                    select: {
-                        name: true,
-                        link: true,
-                        
-                    }
-                }
             }
         })
         return NextResponse.json(users);

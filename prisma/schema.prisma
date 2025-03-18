@@ -23,35 +23,23 @@ model Role {
 }
 
 model User {
-  id_user  Int     @id @default(autoincrement())
-  username String  @unique
-  bio      String?
-  mail     String  @unique
-  password String
-  roleId   Int
-  collectionId Int
+  id_user      Int     @id @default(autoincrement())
+  username     String  @unique
+  bio          String?
+  mail         String  @unique
+  password     String
+  roleId       Int     
+  collectionId Int?
 
-  role            Role            @relation(fields: [roleId], references: [id_role])
-  social_networks SocialNetwork[]
-  articles        Article[]
-  comments        Comment[]
-  likes           Like[]
-  notifications   Notification[]
-  collections     Collection[]
-  categories      Category[]
+  role          Role           @relation(fields: [roleId], references: [id_role])
+  articles      Article[]
+  comments      Comment[]
+  likes         Like[]
+  notifications Notification[]
+  collections   Collection[]
+  categories    Category[]
 
   @@map("users")
-}
-
-model SocialNetwork {
-  id_network Int     @id @default(autoincrement())
-  name       String
-  link       String?
-  userId     Int
-
-  user User @relation(fields: [userId], references: [id_user])
-
-  @@map("social_networks")
 }
 
 model Permission {
@@ -73,7 +61,7 @@ model Article {
   creation_date     DateTime  @default(now())
   modification_date DateTime?
   userId            Int
-  categoryId       Int
+  categoryId        Int
 
   category    Category?    @relation(fields: [categoryId], references: [id_category])
   user        User         @relation(fields: [userId], references: [id_user])
@@ -100,7 +88,7 @@ model Comment {
   content       String
   creation_date DateTime @default(now())
   userId        Int
-  articleId    Int
+  articleId     Int
 
   user    User    @relation(fields: [userId], references: [id_user])
   article Article @relation(fields: [articleId], references: [id_article])
@@ -134,9 +122,9 @@ model Notification {
 }
 
 model Collection {
-  id_collection Int      @id @default(autoincrement())
-  userId    Int
-  articleId Int
+  id_collection Int @id @default(autoincrement())
+  userId        Int
+  articleId     Int
 
   user    User    @relation(fields: [userId], references: [id_user])
   article Article @relation(fields: [articleId], references: [id_article])

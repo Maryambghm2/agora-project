@@ -64,6 +64,7 @@ export async function POST(req: Request) {
                 mail,
                 password: hashedPassword,
                 roleId: 2,
+
             },
         });
         return NextResponse.json({ message: "Utilisateur créé avec succès !", user }, { status: 201 });

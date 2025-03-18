@@ -16,9 +16,11 @@ export async function POST(req: NextRequest, { params }: { params: { id_article:
 
         const token = await getToken({ req });
 
-        if (!token || isNaN(Number(token.sub))) {
+        if (!token || isNaN(Number(token.id))) {
             return NextResponse.json({ error: "ID utilisateur invalide" }, { status: 400 });
         }
+
+        const userId = Number(token.id);
 
         if (!content) {
             return NextResponse.json({ error: "Veuillez mettre un contenu" }, { status: 400 });
@@ -27,8 +29,8 @@ export async function POST(req: NextRequest, { params }: { params: { id_article:
         const comment = await db.comment.create({
             data: {
                 content,
-                userId: Number(token?.sub),
-                id_article: articleId,
+                userId,
+                articleId: articleId,
                 creation_date: new Date()
             },
         });
@@ -39,7 +41,7 @@ export async function POST(req: NextRequest, { params }: { params: { id_article:
             select: { userId: true, title: true },
         });
 
-        if (article) {
+        if (article && (userId !== article.userId)) {
 
             // Envoyer une notification à l'auteur 
             await db.notification.create({

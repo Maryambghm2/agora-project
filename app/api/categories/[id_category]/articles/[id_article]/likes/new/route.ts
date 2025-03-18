@@ -42,7 +42,7 @@ export async function POST(req: NextRequest, { params }: { params: { id_article:
             select: { userId: true, title: true }
         });
 
-        if (article) {
+        if (article && (userId !== article.userId)) {
             await db.notification.create({
                 data: {
                     type: "like",

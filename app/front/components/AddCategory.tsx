@@ -10,7 +10,7 @@ export default function AddCategory() {
 
     const userRole = (session?.user as { role?: number })?.role;
 
-    
+
     // console.log(userRole)
     if (!userRole || userRole !== 1) {
         return <p>Vous n'avez pas l'autorisation d'ajouter une catégorie.</p>;
@@ -45,18 +45,23 @@ export default function AddCategory() {
         }
     };
 
-    return (
-        <div>
-            <h2>Ajouter une catégorie</h2>
-            {message && <p>{message}</p>}
-            <form onSubmit={handleAddCategory}>
+    return  (
+        <div className="p-3 border border-gray-300 rounded-lg shadow-sm bg-white w-64">
+            <h2 className="text-md font-semibold mb-2 text-gray-700">Nouvelle catégorie</h2>
+            {message && <p className="text-xs text-gray-600 mb-1">{message}</p>}
+            <form onSubmit={handleAddCategory} className="flex flex-col space-y-2">
                 <input
                     type="text"
-                    placeholder="Nom de la catégorie"
+                    placeholder="Nom"
                     value={categoryName}
                     onChange={(e) => setCategoryName(e.target.value)}
+                    className="p-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-gray-400 focus:outline-none"
                 />
-                <button type="submit">Ajouter</button>
+                <button
+                    type="submit"
+                    className="bg-gray-600 text-white text-sm px-2 py-1.5 rounded hover:bg-gray-700 transition">
+                    Ajouter
+                </button>
             </form>
         </div>
     );

@@ -2,14 +2,14 @@
   export interface Article {
     _count: any;
     id_article: number;
-    title?: string;
+    title: string;
     content: string;
     image?: string;
     creation_date: Date;
     modification_date?: Date;
-    username: string;
-    user: { id_user: number; username: string };
-    id_category?: number;
+    author: string;
+    user: { userId: number; username: string };
+    categoryId: number;
     category?: Category;
     comments?: Comment[];
     likes?: Like[];

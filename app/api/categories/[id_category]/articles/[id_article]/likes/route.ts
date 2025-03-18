@@ -12,7 +12,7 @@ export async function GET(req: NextRequest, { params }: { params: { id_article: 
         }
         const token = await getToken({ req });
 
-        if (!token || isNaN(Number(token.sub))) {
+        if (!token || isNaN(Number(token.id))) {
             return NextResponse.json({ error: "ID utilisateur invalide" }, { status: 400 });
         }
         const likes = await db.like.findMany({

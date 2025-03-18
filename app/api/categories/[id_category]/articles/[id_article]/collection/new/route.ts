@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "../../../../../../lib/db";
 import { getToken } from "next-auth/jwt";
+import { db } from "../../../../../../lib/db";
 
 export async function POST(req: NextRequest, { params }: { params: { id_article: string } }) {
     try {
@@ -42,9 +42,6 @@ export async function POST(req: NextRequest, { params }: { params: { id_article:
             return NextResponse.json({ message: "Article supprimé de la collection" }, { status: 200 });
         };
 
-        // console.log(token);
-        // console.log(userId);
-        // console.log(articleId);
         
         const collection = await db.collection.create({ data: { userId: userId, articleId: articleId } })
         return NextResponse.json(collection, { status: 201 });

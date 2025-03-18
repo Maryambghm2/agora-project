@@ -41,7 +41,7 @@ export default function UserPage() {
         const response = await fetch(`/api/users/${userId}/articles/`);
         if (response.ok) {
           const data = await response.json();
-          // console.log(data)
+          console.log(data)
           setArticles(data);
         }
       } catch (error) {
@@ -54,79 +54,80 @@ export default function UserPage() {
     fetchArticles();
   }, [userId]);
 
-  if (loading) return <div>Chargement de l'utilisateur...</div>
-  if (!user) return <div>Aucun utilisateur trouvé.</div>
-  if (error) return <div>Erreur : {error}</div>;
-
-
-
   return (
     <div className="flex">
-      <Header username={user.username} />
+      <Header />
       <Sidebar />
       <main className="flex-grow p-8 ml-64 mt-16 bg-gray-100">
-        <div className="bg-gray-100 p-8">
-          <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
-            {/* Profil */}
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="flex flex-row gap-5">
+        <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+          {loading ? (
+            <div className="animate-pulse">
+              <div className="h-6 bg-gray-300 rounded w-1/3 mb-4"></div>
+              <div className="h-4 bg-gray-300 rounded w-2/3 mb-4"></div>
+              <div className="h-24 bg-gray-300 rounded mb-4"></div>
+              <div className="h-6 bg-gray-300 rounded w-1/4"></div>
+            </div>
+          )
+          
+          // {loading ? (
+          //   <p className="text-center text-gray-600">Chargement en cours...</p>
+          // )
+          
+          
+          : error ? (
+            <p className="text-center text-red-500">{error}</p>
+          ) : user ? (
+            <>
+              {/* Profil */}
+              <div className="flex items-center justify-between">
+                <div>
                   <h1 className="text-2xl font-bold">{user.username}</h1>
-                  <h1 className="text-2xl font-extralight">{user.role.name}</h1>
+                  <h2 className="text-xl text-gray-600">{user.role.name}</h2>
+                  <p className="mt-4 text-gray-600">{user.bio || "Aucune bio renseignée"}</p>
                 </div>
-                <div className="p-4">
-                  <p className="text-gray-600">{user.bio || "Aucune bio renseignée"}</p>
-                </div>
+                <img
+                  src="/profil.png"
+                  width={80}
+                  height={80}
+                  alt="Avatar"
+                  className="rounded-full border border-gray-300"
+                />
               </div>
-              <img
-                src={"/profil.png"}
-                width={80}
-                height={80}
-                alt="Avatar"
-                className="rounded-full border"
-              />
-            </div>
 
-            {/* Réseaux sociaux */}
-            <div className="mt-4">
-              <h2 className="font-semibold">Mes réseaux :</h2>
-              <div className="flex gap-3 mt-2">
-                {user.social_networks?.map((network) => (
-                  <a key={network.name} href={network.link || "#"} target="_blank" rel="noopener noreferrer">
-                    <img src={`/${network.name}.png`} alt={network.name} width={30} height={30} />
-                  </a>
-                ))}
+              {/* Email */}
+              <div className="mt-6">
+                <h2 className="font-semibold text-gray-700">Email :</h2>
+                <p className="text-gray-600">{user.mail}</p>
               </div>
-            </div>
 
-            {/* Email */}
-            <div className="mt-4">
-              <h2 className="font-semibold">Email :</h2>
-              <p className="text-gray-700">{user.mail}</p>
-            </div>
-
-
-            {/* Articles */}
-            <div className="mt-6">
-              <h2 className="text-xl font-bold">Mes articles :</h2>
-              {articles.length > 0 ? (
-                <ul className="mt-4">
-                  {articles.map((article) => (
-                    <li key={article.id_article} className="border-b py-3">
-                      <h3 className="font-semibold"><Link href={`/front/categories/${article.id_category}/articles/${article.id_article}`}>{article.title}</Link></h3>
-                      <p className="text-gray-500 text-sm">{article.content.slice(0, 100)}...</p>
-                      <div className="flex flex-row justify-between">
-                        <span className="text-gray-400 text-xs">{new Date(article.creation_date).toLocaleDateString()}</span>
-                        <span className="text-gray-400 text-xs">{article.category?.name}</span>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-gray-500">Vous n'avez pas encore écrit d'article.</p>
-              )}
-            </div>
-          </div>
+              {/* Articles */}
+              <div className="mt-8">
+                <h2 className="text-xl font-bold">Articles :</h2>
+                {articles.length > 0 ? (
+                  <ul className="mt-4 space-y-4">
+                    {articles.map((article) => (
+                      <li key={article.id_article} className="border-b py-3">
+                        <h3 className="font-semibold text-gray-900">
+                          <Link href={`/front/categories/${article.categoryId}/articles/${article.id_article}`} className="hover:underline">
+                            {article.title}
+                          </Link>
+                        </h3>
+                        <p className="text-gray-500 text-sm">{article.content.slice(0, 100)}...</p>
+                        <div className="flex justify-between text-xs text-gray-400">
+                          <span>{new Date(article.creation_date).toLocaleDateString()}</span>
+                          <span>{article.category?.name}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-gray-500">Vous n'avez pas encore écrit d'article.</p>
+                )}
+              </div>
+            </>
+          ) : (
+            <p className="text-center text-gray-500">Aucun utilisateur trouvé.</p>
+          )}
         </div>
       </main>
     </div>

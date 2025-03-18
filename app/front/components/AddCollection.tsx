@@ -1,21 +1,23 @@
 'use client'
 import { useEffect, useState } from 'react';
-import { AddCollectionProps } from '../types/page';
+import { AddCollectionProps, CustomUser } from '../types/page';
+import { useSession } from 'next-auth/react';
 
-export default function AddCollection({ articleId, isInCollection, categoryId, userId }: AddCollectionProps) {
-    const [isInUserCollection, setIsInUserCollection] = useState(isInCollection);
+export default function AddCollection({ articleId, categoryId }: { articleId: number, categoryId: number,}) {
+    const [isInCollection, setIsInCollection] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-
-
-    useEffect(() => {
-        setIsInUserCollection(isInCollection);
-    }, [isInCollection]);
+    const { data: session } = useSession();
+    const userSession = session?.user as CustomUser;
+    const userId = userSession?.id;
 
     const handleClick = async () => {
+        if (!userId) return;
+
         setLoading(true);
         setError(null);
+
         try {
 
             const response = await fetch(`/api/categories/${categoryId}/articles/${articleId}/collection/new`, {
@@ -23,13 +25,13 @@ export default function AddCollection({ articleId, isInCollection, categoryId, u
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ id_article: articleId, id_user: userId }),
             });
-
-            const data = await response.json();
-
-
-            setIsInUserCollection(!isInUserCollection);
+            if (response.ok) {
+                setIsInCollection(!isInCollection);
+                // onChangeArticle();
+            } else {
+                console.error('Erreur lors de l\'ajout/suppression de la collection');
+            }
         } catch (err) {
             setError((err as Error).message);
         } finally {
@@ -37,13 +39,42 @@ export default function AddCollection({ articleId, isInCollection, categoryId, u
         }
     };
 
+    useEffect(() => {
+    const checkIfInCollection = async () => {
+        if (!userId) return;
+
+        try {
+            const response = await fetch(`/api/users/${userId}/collection/${articleId}`);
+            const data = await response.json();
+
+            // Vérifie si l'article est bien dans la collection
+            if (Array.isArray(setIsInCollection(data))) {
+                data.some((collection: any) => collection.id_article === articleId);
+            } else {
+                setIsInCollection(data);
+            }
+        } catch (error) {
+            console.error("Erreur lors de la vérification de la collection", error);
+        } 
+    };
+
+  
+        checkIfInCollection();
+
+    }, [userId, articleId]);
+
+
+
     return (
-        <button
-            onClick={handleClick}
-            disabled={loading}
-            className={`btn ${isInUserCollection ? "btn-danger" : "btn-primary"}`}
-        >
-            {loading ? "Chargement..." : isInUserCollection ? "Supprimer de la collection" : "Ajouter à la collection"}
-        </button>
+        <div className="mt-4 flex items-center space-x-2">
+            <button
+                onClick={handleClick}
+                disabled={loading}
+                className={`px-4 py-2 rounded-lg text-white transition ${isInCollection ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600'
+                    }`}
+            >
+                {loading ? 'Chargement...' : isInCollection ? '❌ Retirer de la collection' : '⭐ Ajouter à la collection'}
+            </button>
+        </div>
     );
 };

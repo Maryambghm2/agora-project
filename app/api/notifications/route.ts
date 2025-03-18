@@ -3,15 +3,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "../lib/db";
 
 export async function GET(req: NextRequest) {
-    const token = await getToken({ req });
-
-    if (!token || isNaN(Number(token.sub))) {
-        return NextResponse.json({ error: "Utilisateur non authentifié" }, { status: 401 });
-    }
-
     try {
+        const token = await getToken({ req });
+
+        if (!token || isNaN(Number(token.id))) {
+            return NextResponse.json({ error: "Utilisateur non authentifié" }, { status: 401 });
+        }
+
+        const userId = Number(token.id);
+
         const notifications = await db.notification.findMany({
-            where: { userId: Number(token.sub) },
+            where: { userId },
             orderBy: { notification_date: "desc" },
         });
 
@@ -23,15 +25,19 @@ export async function GET(req: NextRequest) {
 };
 
 export async function PUT(req: NextRequest) {
+    try {
+
     const token = await getToken({ req });
 
-    if (!token || isNaN(Number(token.sub))) {
+    if (!token || isNaN(Number(token.id))) {
         return NextResponse.json({ error: "Utilisateur non authentifié" }, { status: 401 });
     }
 
-    try {
+    const userId = Number(token.id);
+
+
         await db.notification.updateMany({
-            where: { userId: Number(token.sub), read_status: false },
+            where: { userId, read_status: false },
             data: { read_status: true },
         });
 

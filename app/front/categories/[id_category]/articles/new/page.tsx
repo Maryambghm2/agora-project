@@ -1,5 +1,5 @@
-import ArticleForm from "../../../../components/ArticleForm";
+import AddArticle from "../../../../components/AddArticle";
 
 export default function NewArticle() {
-    return <ArticleForm />
+    return <AddArticle />
 }

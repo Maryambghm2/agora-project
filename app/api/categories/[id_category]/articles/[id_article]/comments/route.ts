@@ -8,7 +8,7 @@ export async function GET({ params }: { params: { id_article: string } }) {
 
         const comments = await db.comment.findMany({
             where: {
-                id_article: articleId
+                articleId: articleId
             },
             include: { user: true, article: true },
         });
