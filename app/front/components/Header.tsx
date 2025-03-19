@@ -27,7 +27,7 @@ export default function Header({ onSearch, searchPlaceholder }: HeaderProps) {
       <div className="flex items-center space-x-6">
         <GetNotifications />
         <div className="flex items-center space-x-2">
-          <Link href={`/front/users/${userId}`} className="flex items-center">
+          <Link href={`/front/users/me/${userId}`} className="flex items-center">
             <img
               src="/profil.png"
               width={32}

@@ -1,19 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "../../lib/db";
+import { db } from "../../../lib/db";
+import { getToken } from "next-auth/jwt";
 
-export async function GET(req: NextRequest, { params }: { params: Promise<{ id_user: string }> }) {
+export async function GET(req: NextRequest) {
     try {
 
-        const { id_user } = await params;
-    const userId = Number(id_user);
+        const token = await getToken({ req });
 
-
+        if (!token || isNaN(Number(token.id))) {
+            return NextResponse.json({ error: "ID utilisateur invalide" }, { status: 400 });
+        }
         const users = await db.user.findUnique({
             where: {
-                id_user: userId
+                id_user: Number(token.id)
             },
             select: {
-                username: true, id_user: true, mail: true, roleId: true,
+                username: true, id_user: true, mail: true, bio:true, roleId: true,
                 role: {
                     select: {
                         name: true

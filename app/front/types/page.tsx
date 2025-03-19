@@ -8,6 +8,7 @@ export interface Article {
   creation_date: Date;
   modification_date?: Date;
   author: string;
+  author_id: string;
   user: { userId: number; username: string };
   categoryId: number;
   category?: Category;

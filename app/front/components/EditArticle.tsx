@@ -75,7 +75,7 @@ export default function EditArticle({ articleId, currentTitle, currentContent, a
                     className="border p-2 rounded h-40"
                     required
                 />
-                <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
+                <button type="submit" className="bg-gray-500 text-white py-2 px-4 rounded">
                     Modifier
                 </button>
                 <button type="button" onClick={onCancel} className="bg-gray-400 text-white py-2 px-4 rounded">

@@ -15,7 +15,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id_user:
 
     try {
         const articlesUser = await prisma.article.findMany({
-            where: { userId: Number(userId) },
+            where: { userId },
             include: {
                 category: {
                     select: {

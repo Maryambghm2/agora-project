@@ -27,7 +27,10 @@ export default function GetNotifications() {
 
   return (
     <>
-      <button className="relative" onClick={() => setOpen(!open)}>
+      <button
+        className="relative flex items-center justify-center"
+        onClick={() => setOpen(!open)}
+      >
         <img src="/cloche.png" width={24} height={24} alt="Notifications" />
         {unreadCount > 0 && (
           <span className="absolute top-0 right-0 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
@@ -37,17 +40,17 @@ export default function GetNotifications() {
       </button>
 
       {open && (
-        <div className="fixed top-5 right-5 w-72 p-3 bg-white rounded-lg shadow-lg z-50 max-h-[400px] overflow-y-auto">
-          <h2 className="text-lg font-semibold mb-2">Notifications</h2>
+        <div className="fixed top-5 right-5 w-80 p-4 bg-gray-300 rounded-lg shadow-lg z-50 max-h-[400px] overflow-y-auto transition-transform duration-300 ease-in-out transform">
+          <h2 className="text-lg font-semibold mb-3 text-gray-800">Notifications</h2>
 
           {notifications.length > 0 ? (
-            <ul className="max-h-60 overflow-y-auto">
+            <ul className="space-y-2 max-h-60 overflow-y-auto">
               {notifications.map((notif) => (
                 <li
                   key={notif.id_notification}
-                  className={`p-2 rounded ${notif.read_status ? "bg-gray-200" : "bg-blue-100"}`}
+                  className={`p-3 rounded-lg ${notif.read_status ? "bg-gray-200" : "bg-gray-100"} transition duration-200 ease-in-out`}
                 >
-                  <p className="text-sm">{notif.message}</p>
+                  <p className="text-sm text-gray-800">{notif.message}</p>
                   <span className="text-xs text-gray-500">{new Date(notif.notification_date).toLocaleString()}</span>
                 </li>
               ))}
@@ -56,19 +59,21 @@ export default function GetNotifications() {
             <p className="text-sm text-gray-500">Aucune notification</p>
           )}
 
-          <button
-            onClick={markAllAsRead}
-            className="mt-3 w-full py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
-          >
-            Tout marquer comme lu
-          </button>
+          <div className="mt-4 flex justify-between items-center">
+            <button
+              onClick={markAllAsRead}
+              className="py-2 px-4 bg-gray-500 text-white rounded-lg hover:bg-gray-400 transition duration-200"
+            >
+              Tout marquer comme lu
+            </button>
 
-          <button
-            onClick={() => setOpen(false)}
-            className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-          >
-            X
-          </button>
+            <button
+              onClick={() => setOpen(false)}
+              className="text-gray-500 hover:text-gray-700 text-xl font-bold"
+            >
+              &times;
+            </button>
+          </div>
         </div>
       )}
     </>

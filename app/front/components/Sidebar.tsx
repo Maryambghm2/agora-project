@@ -21,7 +21,7 @@ export default function Sidebar() {
             <Link href="/front/categories" className="hover:text-gray-300">Catégories</Link>
           </li>
           <li>
-            <Link href={`/front/users/${userId}/collection`} className="hover:text-gray-300">Collection</Link>
+            <Link href={`/front/users/me/${userId}/collection`} className="hover:text-gray-300">Collection</Link>
           </li>
         </ul>
       </nav>

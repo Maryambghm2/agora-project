@@ -1,5 +1,5 @@
-import UserPage from "../../components/UserProfile";
+import UserProfile from "../../components/UserProfile";
 
 export default function Profile() {
-    return <UserPage />
+    return <UserProfile />
 }

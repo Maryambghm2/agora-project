@@ -44,7 +44,7 @@ export default function AddCollection({ articleId, categoryId }: { articleId: nu
         if (!userId) return;
 
         try {
-            const response = await fetch(`/api/users/${userId}/collection/${articleId}`);
+            const response = await fetch(`/api/users/me/${userId}/collection/${articleId}`);
             const data = await response.json();
 
             // Vérifie si l'article est bien dans la collection
@@ -70,7 +70,7 @@ export default function AddCollection({ articleId, categoryId }: { articleId: nu
             <button
                 onClick={handleClick}
                 disabled={loading}
-                className={`px-4 py-2 rounded-lg text-white transition ${isInCollection ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600'
+                className={`px-4 py-2 rounded-lg text-white transition ${isInCollection ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-500 hover:bg-gray-600'
                     }`}
             >
                 {loading ? 'Chargement...' : isInCollection ? '❌ Retirer de la collection' : '⭐ Ajouter à la collection'}

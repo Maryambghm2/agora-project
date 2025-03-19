@@ -20,6 +20,7 @@ export function AllArticles() {
             const formattedArticles = data.map((article: any) => ({
                 id_article: article.id_article,
                 author: article.user.username,
+                author_id: article.user.id_user,
                 title: article.title,
                 content: article.content,
                 creation_date: article.creation_date,
@@ -70,7 +71,7 @@ export function AllArticles() {
                                 </h3>
                                 <p className="text-gray-500 text-sm">{article.content.slice(0, 100)}...</p>
                                 <div className="flex flex-row justify-between align-middle">
-                                    <Link href={`/front/users/${article.author}`} className="hover:underline">
+                                    <Link href={`/front/users/${article.author_id}`} className="hover:underline">
                                         Publié par : {article.author}
                                     </Link>
                                     <span>{new Date(article.creation_date).toLocaleDateString()}</span>

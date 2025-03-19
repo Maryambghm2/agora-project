@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { db } from "../../../../lib/db";
+import { db } from "../../../../../lib/db";
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id_article: string }> }) {
     try {

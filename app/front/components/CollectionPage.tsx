@@ -20,7 +20,7 @@ export default function CollectionPage() {
 
     async function fetchArticlesCollection() {
         try {
-            const response = await fetch(`/api/users/${userId}/collection`)
+            const response = await fetch(`/api/users/me/${userId}/collection`)
 
             const data = await response.json();
             // console.log(data)
