@@ -19,7 +19,7 @@ model Role {
 model User {
   id_user       Int            @id @default(autoincrement())
   username      String         @unique
-  bio           String?        
+  bio           String?
   mail          String         @unique
   password      String
   roleId        Int

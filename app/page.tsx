@@ -1,5 +1,7 @@
-import Link from "next/link";
+import LoginPage from "./front/login/page";
 
 export default function Home() {
-<h1><Link href='front/login'>Bienvenue chez Agora Community</Link></h1>
+
+return <LoginPage/>
+{/* <h1><Link href='front/login'>Bienvenue chez Agora Community</Link></h1> */}
 }

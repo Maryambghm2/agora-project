@@ -8,7 +8,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }} 
     steps:
       # Étape 1 : Vérifier le code source
       - name: Checkout code
