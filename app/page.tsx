@@ -1,5 +1,5 @@
 import LoginPage from "./front/components/LoginFunc";
 
-export function HomePage() {
+export default function HomePage() {
     return LoginPage
 }
