@@ -23,7 +23,12 @@ RUN npm run build
 EXPOSE 3000
 
 # Démarrer l'application
-CMD ["npm", "start"]
+# CMD ["npm", "start"]
 
 
 ENV DATABASE_URL=$DATABASE_URL
+
+# Copie le fichier de backup dans le conteneur
+COPY backups/backup_data.sql /tmp/backup_data.sql
+# Commande pour restaurer la base de données après le démarrage
+CMD psql -U maryam -d postgres -f /tmp/backup_data.sql && npm start
