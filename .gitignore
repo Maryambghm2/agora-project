@@ -44,3 +44,4 @@ cypress
 
 cypress.config.ts 
 cypress.env.json
+swagger.ts
