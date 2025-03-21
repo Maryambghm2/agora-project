@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
                         },
                         user: {
                             select: {
-                                username: true
+                                username: true,
                             }
                         }
                     },

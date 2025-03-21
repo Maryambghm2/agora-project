@@ -15,20 +15,22 @@ export function AllArticles() {
         try {
             const response = await fetch('/api/articles')
             const data = await response.json();
-            // console.log(data)
+            if (data.length > 0) {
+                const formattedArticles = data.map((article: any) => ({
+                    id_article: article.id_article,
+                    author: article.user.username,
+                    author_id: article.user.id_user,
+                    title: article.title,
+                    content: article.content,
+                    creation_date: article.creation_date,
+                    category: article.category,
+                }));
 
-            const formattedArticles = data.map((article: any) => ({
-                id_article: article.id_article,
-                author: article.user.username,
-                author_id: article.user.id_user,
-                title: article.title,
-                content: article.content,
-                creation_date: article.creation_date,
-                category: article.category,
-            }));
-
-            setArticles(formattedArticles || []);
-            setLoading(false)
+                setArticles(formattedArticles || []);
+                setLoading(false)
+            } else {
+                setError("Pas encore d'articles disponible pour vous.")
+            }
         } catch (err) {
             console.error(err);
             setError("Impossible de charger les articles");

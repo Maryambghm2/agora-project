@@ -25,7 +25,7 @@ export default function MyProfil() {
       const response = await fetch(`/api/users/me/${userId}`)
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         setUser(data)
         setLoading(false)
       }
@@ -41,7 +41,6 @@ export default function MyProfil() {
       const response = await fetch(`/api/users/${userId}/articles/`);
       if (response.ok) {
         const data = await response.json();
-        // console.log(data)
         setArticles(data);
       }
     } catch (error) {
@@ -73,11 +72,11 @@ export default function MyProfil() {
                   <div>
                     <h1 className="text-2xl font-bold">{user.username}</h1>
                     <h2 className="text-xl text-gray-600">{user.role.name}</h2>
-                    <div className="flex justify-between items-center">
+                    <div className="flex  flex-col justify-between items-center border rounded-2xl p-5 mt-3 bg-gray-300">
                       {/* Section bio modifiable */}
                       {isEditingBio ? (
                         <EditBio
-                          currentBio={user?.bio || ''}
+                          currentBio={user.bio || ''}
                           userId={userId}
                           onCancel={() => setIsEditingBio(false)}
                           onSuccess={() => {
@@ -86,25 +85,28 @@ export default function MyProfil() {
                           }}
                         />
                       ) : (
-                        <div className="mt-4 max-w-60">
-                          <p className="text-lg ">Bio:</p>
-                          <p>{user?.bio || "Pas de bio disponible"}</p>
+
+                        <div className="mt-4 flex flex-row gap-7 pr-30">
+                          <p className="text-lg font-bold ">Bio:</p>
+                          <p>{user.bio || "Pas de bio disponible"}</p>
                         </div>
                       )}
                       <button
                         onClick={() => setIsEditingBio(!isEditingBio)}
-                        className="text-gray-500 hover:text-gray-700"
+                        className="text-gray-500 hover:text-gray-700 p-3"
                       >   {isEditingBio ? "Annuler" : "Modifier la bio"}
                       </button>
                     </div>
                   </div>
-                  <img
-                    src="/profil.png"
-                    width={80}
-                    height={80}
-                    alt="Avatar"
-                    className="rounded-full border border-gray-300"
-                  />
+                  <div className="p-5 border-b-0 bg-gray-200">
+                    <img
+                      src="/profil.png"
+                      width={80}
+                      height={80}
+                      alt="Avatar"
+                      className="rounded-full border border-gray-200"
+                    />
+                  </div>
                 </div>
 
 

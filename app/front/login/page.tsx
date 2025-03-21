@@ -9,17 +9,29 @@ export default function LoginPage() {
     const [mail, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const router = useRouter();
 
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!mail || !password) {
+            setError("Veuillez remplir tous les champs.");
+            return;
+        }
+
+        setLoading(true);
+        setError("");
+
         const response = await signIn("credentials", {
             mail,
             password,
             redirect: false,
         });
+
+        setLoading(false);
 
         if (response?.error) {
             setError("Identifiants incorrects !");
@@ -53,8 +65,8 @@ export default function LoginPage() {
                         onChange={(e) => setPassword(e.target.value)}
                         className="border p-2 rounded"
                     />
-                    <button type="submit" className="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded">
-                        Se connecter
+                    <button type="submit" className="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded"    disabled={!mail || !password || loading}>
+                        {loading ? "Connexion en cours...": "Se connecter"}
                     </button>
                     <LinkRegister />
                 </form>
