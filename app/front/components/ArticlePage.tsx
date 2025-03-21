@@ -40,7 +40,7 @@ export default function ArticlePage() {
             return;
         }
         try {
-            const response = await fetch(`http://localhost:3000/api/categories/${id_category}/articles/${id_article}`);
+            const response = await fetch(`/api/categories/${id_category}/articles/${id_article}`);
             const data = await response.json();
             setArticle(data);
             setComments(data.comments || []);
