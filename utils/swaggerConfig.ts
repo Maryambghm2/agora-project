@@ -15,7 +15,7 @@ const options: swaggerJSDoc.Options = {
       },
     ],
   },
-  apis: ["./src/app/api/**/*.ts"], // Chemin vers les fichiers API Next.js
+  apis: ["./app/api/**/*.ts"], 
 };
 
 export const swaggerSpec = swaggerJSDoc(options);
