@@ -76,7 +76,10 @@ export function AllArticles() {
                                     <Link href={`/front/users/${article.author_id}`} className="hover:underline">
                                         Publié par : {article.author}
                                     </Link>
-                                    <span>{new Date(article.creation_date).toLocaleDateString()}</span>
+                                    <span>{article.modification_date ?
+                                        new Date(article.modification_date).toLocaleDateString()
+                                        : new Date(article.creation_date).toLocaleDateString()}
+                                    </span>
                                     <Link href={`/front/categories/${article.category?.id_category}/articles`}><span className="text-gray-400 text-xs">{article.category?.name}</span></Link>
                                 </div>
                             </div>

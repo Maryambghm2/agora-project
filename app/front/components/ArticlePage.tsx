@@ -189,7 +189,10 @@ export default function ArticlePage() {
                                         <p className="text-gray-800">{comment.content}</p>
                                         <div className="flex flex-row justify-between mt-2">
                                             <span>Par {comment.user.username}</span>
-                                            <span className="text-sm text-gray-500">Posté le {new Date(comment.creation_date).toLocaleDateString()}</span>
+                                            <span className="text-sm text-gray-500">Posté le {article.modification_date ?
+                                                new Date(article.modification_date).toLocaleDateString()
+                                                : new Date(article.creation_date).toLocaleDateString()}
+                                            </span>
                                         </div>
                                     </li>
                                 ))}

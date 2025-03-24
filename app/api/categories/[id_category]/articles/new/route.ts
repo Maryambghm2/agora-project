@@ -6,8 +6,8 @@ import { db } from "../../../../lib/db";
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id_category: string }> }) {
     try {
 
-         const {id_category } = await params;
-        const categoryId = Number(id_category); 
+        const { id_category } = await params;
+        const categoryId = Number(id_category);
 
 
         const token = await getToken({ req });
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id_
 
         const userId = Number(token.id);
 
-        
+
         const { title, content } = await req.json();
 
         if (!title || !content) {
@@ -45,7 +45,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id_
             },
         });
 
-
+        console.log(token);
+        console.log({ title, content })
         return NextResponse.json({ article }, { status: 201 });
     } catch (error) {
         return NextResponse.json({ error: "Erreur lors de la création de l'article" }, { status: 500 });

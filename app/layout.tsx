@@ -15,13 +15,9 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <head>
-        <link 
-          href="https://fonts.googleapis.com/css2?family=Agdasima:wght@400;700&display=swap" 
-          rel="stylesheet" 
-        />
       </head>
       <body>
-      <Providers>{children}</Providers> 
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

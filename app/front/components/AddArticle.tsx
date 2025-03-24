@@ -5,16 +5,12 @@ import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { useParams, useRouter } from "next/navigation";
 
-
-
 export default function AddArticle() {
     const { id_category } = useParams();
     const [title, setTitle] = useState("")
     const [content, setContent] = useState("");
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
-
-
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
