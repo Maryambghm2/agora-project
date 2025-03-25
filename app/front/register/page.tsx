@@ -12,9 +12,10 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#?!@$ %^&*-]).{8,}$/
 
 export default function RegisterForm() {
   const [username, setUsername] = useState("");
-  const [mail, setEmail] = useState("");
+  const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [passwordStatus, setPasswordStatus] = useState([
     "Au moins 8 caractères",
     "Une majuscule",
@@ -39,6 +40,9 @@ export default function RegisterForm() {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    setError("");
+    setSuccess("");
+
     if (!username || !mail || !password) {
       setError("Tous les champs sont obligatoires.");
       return;
@@ -56,15 +60,19 @@ export default function RegisterForm() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, mail, password }),
     });
+    const result = await response.json();
 
+    // console.log("Réponse du serveur:", result);
     if (!response.ok) {
-      setError("Erreur lors de l'inscription !");
+      setError(result.error || "Erreur lors de l'inscription !");
       return;
     }
+    setSuccess("Inscription réussie ! Redirection en cours...");
+    setTimeout(() => {
+      router.push("/front/login");
+    }, 2000);
 
-    router.push("/front/login");
   };
-
   return (
     <>
       <aside>
@@ -75,8 +83,8 @@ export default function RegisterForm() {
         {error && <p className="text-red-500">{error}</p>}
         <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
           <input type="text" placeholder="Nom d'utilisateur" value={username} onChange={(e) => setUsername(e.target.value)} className="border p-2 rounded" />
-          <input type="email" placeholder="Email" value={mail} onChange={(e) => setEmail(e.target.value)} className="border p-2 rounded" />
-          <input type="password" placeholder="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} className="border p-2 rounded" />
+          <input type="email" placeholder="Email" value={mail} onChange={(e) => setMail(e.target.value)} className="border p-2 rounded" />
+          <input type="password" placeholder="Mot de passe" value={password} onChange={(e) => handlePasswordChange(e.target.value)} className="border p-2 rounded" />
           <ul className="text-sm">
             {passwordStatus.map((status, index) => (
               <li key={index} className={status.includes("✓") ? "text-green-950" : "text-red-950"}>{status}</li>
