@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react';
-import { AddCollectionProps, CustomUser } from '../types/page';
+import { CustomUser } from '../types/page';
 import { useSession } from 'next-auth/react';
 
 export default function AddCollection({ articleId, categoryId }: { articleId: number, categoryId: number,}) {
